@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portfolio | Full-Stack .NET Developer</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        dark: '#0f0f0f',
+                        primary: '#f97316',
+                        surface: '#1c1c1c'
+                    },
+                    fontFamily: { sans: ['Inter', 'sans-serif'] }
+                }
+            }
+        }
+    </script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        *, *::before, *::after { box-sizing: border-box; }
+        html { overflow-x: hidden; }
+        body { font-family: 'Inter', sans-serif; background-color: #0f0f0f; color: #fff; overflow-x: hidden; margin: 0; }
+
+        /* ── NAV ── */
+        .hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; padding: 4px; }
+        .hamburger span { display: block; width: 22px; height: 2px; background: #fff; border-radius: 2px; transition: all .3s; }
+        .mobile-menu { display: none; position: absolute; top: 100%; left: 0; right: 0; background: #0f0f0f; border-bottom: 1px solid #1f1f1f; padding: 1rem 1.5rem; flex-direction: column; gap: .75rem; }
+        .mobile-menu.open { display: flex; }
+
+        /* ── HERO CODE BLOCK ── */
+        .hero-code-block {
+            background: #111; border: 1px solid #2a2a2a; border-radius: 16px;
+            padding: 28px 20px 20px; font-family: 'Fira Code','Courier New',monospace;
+            font-size: clamp(11px, 2vw, 13px); line-height: 1.8; color: #a0a0a0;
+            position: relative; overflow: hidden;
+        }
+        .hero-code-block::before {
+            content: ''; position: absolute; top: 0; left: 0; right: 0; height: 36px;
+            background: #1a1a1a; border-bottom: 1px solid #2a2a2a; border-radius: 16px 16px 0 0;
+        }
+        .hero-code-block::after {
+            content: '● ● ●'; position: absolute; top: 10px; left: 16px;
+            font-size: 11px; letter-spacing: 5px; color: #444;
+        }
+        .code-content { margin-top: 20px; }
+        .code-kw { color: #f97316; } .code-fn { color: #60a5fa; }
+        .code-str { color: #4ade80; } .code-cm { color: #555; } .code-num { color: #e879f9; }
+
+        /* ── TYPING CURSOR ── */
+        .typing-cursor::after { content: '|'; animation: blink 1s step-end infinite; color: #f97316; }
+        @keyframes blink { 50% { opacity: 0; } }
+
+        /* ── FLOAT ANIMATIONS ── */
+        @keyframes float1 { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+        @keyframes float2 { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-14px); } }
+        .float1 { animation: float1 4s ease-in-out infinite; }
+        .float2 { animation: float2 5s ease-in-out infinite 1s; }
+
+        /* ── PROJECT CARDS ── */
+        .project-card { transition: transform .3s ease, box-shadow .3s ease, border-color .3s ease; }
+        .project-card:hover { transform: translateY(-6px); box-shadow: 0 0 40px rgba(249,115,22,.12); border-color: rgba(249,115,22,.4); }
+        .project-link-btn { opacity: 0; transform: translateY(8px); transition: all .3s ease; }
+        .project-card:hover .project-link-btn { opacity: 1; transform: translateY(0); }
+        /* always show on touch devices */
+        @media (hover: none) { .project-link-btn { opacity: 1; transform: translateY(0); } }
+
+        /* ── RESPONSIVE BREAKPOINTS ── */
+        @media (max-width: 767px) {
+            .hamburger { display: flex; }
+            .hero-code-block { font-size: 11px; padding: 28px 14px 14px; }
+            .hero-code-block p { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+            /* hide floating badges on very small screens */
+            .float1, .float2 { display: none; }
+            /* About heading */
+            .about-name { font-size: 2.5rem !important; }
+            /* About profile text */
+            .about-text { font-size: 1rem !important; }
+            /* Skill cards: smaller padding on mobile */
+            .skill-card { padding: 1.25rem !important; }
+            .skill-card .icon-wrap { width: 2.5rem !important; height: 2.5rem !important; margin-bottom: .75rem !important; }
+        }
+        @media (max-width: 480px) {
+            .about-name { font-size: 2rem !important; }
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+<!-- ═══════════════════════════ NAV ═══════════════════════════ -->
+<nav class="fixed w-full z-50 top-0 bg-dark/90 backdrop-blur-md border-b border-gray-800">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 py-4 flex justify-between items-center relative">
+        <div class="text-xl font-bold">Dev<span class="text-primary">.NET</span></div>
+
+        <!-- Desktop links -->
+        <div class="hidden md:flex space-x-8 text-sm font-medium text-gray-300">
+            <a href="#home"     class="hover:text-primary transition">Home</a>
+            <a href="#about"    class="hover:text-primary transition">About</a>
+            <a href="#skills"   class="hover:text-primary transition">Skills</a>
+            <a href="#projects" class="hover:text-primary transition">Projects</a>
+            <a href="#contact"  class="hover:text-primary transition">Contact</a>
+        </div>
+
+        <a href="#contact" class="hidden md:block border border-gray-600 hover:border-primary hover:text-primary text-sm px-5 py-2 rounded-lg transition">Contact</a>
+
+        <!-- Hamburger -->
+        <button class="hamburger md:hidden" onclick="this.nextElementSibling.classList.toggle('open')" aria-label="menu">
+            <span></span><span></span><span></span>
+        </button>
+        <!-- Mobile menu -->
+        <div class="mobile-menu md:hidden">
+            <a href="#home"     onclick="this.parentElement.classList.remove('open')" class="text-gray-300 hover:text-primary transition py-1">Home</a>
+            <a href="#about"    onclick="this.parentElement.classList.remove('open')" class="text-gray-300 hover:text-primary transition py-1">About</a>
+            <a href="#skills"   onclick="this.parentElement.classList.remove('open')" class="text-gray-300 hover:text-primary transition py-1">Skills</a>
+            <a href="#projects" onclick="this.parentElement.classList.remove('open')" class="text-gray-300 hover:text-primary transition py-1">Projects</a>
+            <a href="#contact"  onclick="this.parentElement.classList.remove('open')" class="bg-primary text-white px-4 py-2 rounded-lg text-sm font-medium w-fit">Contact</a>
+        </div>
+    </div>
+</nav>
+
+<!-- ═══════════════════════════ HERO ═══════════════════════════ -->
+<section id="home" class="min-h-screen flex flex-col justify-center pt-20 relative overflow-hidden">
+    <div class="absolute top-1/4 right-0 w-64 sm:w-96 h-64 sm:h-96 bg-primary/5 blur-[120px] rounded-full -z-10"></div>
+
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 grid md:grid-cols-2 gap-10 items-center w-full py-12 md:py-0">
+
+        <!-- Left: text -->
+        <div class="space-y-6 sm:space-y-8">
+            <h1 class="text-4xl sm:text-5xl md:text-6xl font-bold leading-tight">
+                Full-Stack <br><span class="text-primary">.NET Developer</span>
+            </h1>
+            <p class="text-gray-400 text-base sm:text-lg leading-relaxed max-w-md">
+                Engineering student bridging robust backend architectures with dynamic frontend experiences. Building scalable solutions from Egypt to Geneva.
+            </p>
+            <div class="flex flex-wrap gap-3 sm:gap-4">
+                <a href="#projects" class="bg-primary text-white px-5 py-2.5 sm:px-6 sm:py-3 rounded-lg font-medium hover:bg-orange-600 transition flex items-center gap-2 text-sm sm:text-base">
+                    Explore Work <i class="fa-solid fa-arrow-right"></i>
+                </a>
+                <a href="#contact" class="bg-surface border border-gray-700 hover:border-gray-500 px-5 py-2.5 sm:px-6 sm:py-3 rounded-lg font-medium transition text-sm sm:text-base">
+                    Let's Connect
+                </a>
+            </div>
+            <div class="flex gap-8 sm:gap-12">
+                <div><h3 class="text-2xl sm:text-3xl font-bold">6+</h3><p class="text-gray-500 text-xs sm:text-sm mt-1">Major Projects</p></div>
+                <div><h3 class="text-2xl sm:text-3xl font-bold">100%</h3><p class="text-gray-500 text-xs sm:text-sm mt-1">Client Satisfaction</p></div>
+            </div>
+            <div class="flex gap-3">
+                <a href="#" class="w-10 h-10 bg-surface rounded-lg flex items-center justify-center text-gray-400 hover:text-primary transition"><i class="fa-brands fa-linkedin-in"></i></a>
+                <a href="#" class="w-10 h-10 bg-surface rounded-lg flex items-center justify-center text-gray-400 hover:text-primary transition"><i class="fa-brands fa-github"></i></a>
+            </div>
+        </div>
+
+        <!-- Right: code block -->
+        <div class="relative mt-6 md:mt-0">
+            <div class="absolute inset-0 bg-primary/10 blur-3xl rounded-full pointer-events-none"></div>
+            <div class="relative z-10">
+                <div class="hero-code-block">
+                    <div class="code-content space-y-1">
+                        <p><span class="code-cm">// Full-Stack .NET Developer</span></p>
+                        <p><span class="code-kw">namespace</span> <span class="code-fn">Portfolio</span>;</p>
+                        <p>&nbsp;</p>
+                        <p><span class="code-kw">public class</span> <span class="code-fn">KhaledAli</span></p>
+                        <p>{</p>
+                        <p>&nbsp;&nbsp;<span class="code-kw">public</span> <span class="code-fn">string[]</span> Skills =</p>
+                        <p>&nbsp;&nbsp;{</p>
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;<span class="code-str">"ASP.NET Core"</span>,</p>
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;<span class="code-str">"Angular"</span>, <span class="code-str">"EF Core"</span>,</p>
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;<span class="code-str">"SQL Server"</span>, <span class="code-str">"C#"</span></p>
+                        <p>&nbsp;&nbsp;};</p>
+                        <p>&nbsp;</p>
+                        <p>&nbsp;&nbsp;<span class="code-kw">public int</span> Experience = <span class="code-num">2</span>; <span class="code-cm">// years</span></p>
+                        <p>&nbsp;</p>
+                        <p>&nbsp;&nbsp;<span class="code-kw">public</span> <span class="code-fn">bool</span> Available()</p>
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;=> <span class="code-str">true</span>; <span class="code-cm">// always ✓</span></p>
+                        <p>}<span class="typing-cursor"></span></p>
+                    </div>
+                </div>
+                <div class="absolute -top-4 -left-4 sm:-left-6 z-20 bg-surface border border-gray-700 px-3 py-1.5 sm:px-4 sm:py-2 rounded-xl flex items-center gap-2 shadow-lg float1">
+                    <i class="fa-solid fa-code text-primary text-sm"></i>
+                    <span class="text-xs sm:text-sm font-medium">Backend Logic</span>
+                </div>
+                <div class="absolute -bottom-4 -right-4 sm:-right-6 z-20 bg-surface border border-gray-700 px-3 py-1.5 sm:px-4 sm:py-2 rounded-xl flex items-center gap-2 shadow-lg float2">
+                    <i class="fa-solid fa-server text-primary text-sm"></i>
+                    <span class="text-xs sm:text-sm font-medium">API Integration</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ═══════════════════════════ ABOUT ═══════════════════════════ -->
+<section id="about" class="py-16 sm:py-24 bg-[#0a0a0a] relative overflow-hidden">
+    <div class="absolute top-0 left-0 w-full h-full opacity-20 pointer-events-none">
+        <div class="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-primary/10 blur-[120px] rounded-full"></div>
+    </div>
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 relative z-10">
+        <div class="flex flex-col md:flex-row justify-between items-start md:items-end mb-10 sm:mb-16 gap-6">
+            <div class="space-y-3 sm:space-y-4">
+                <div class="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-primary/10 border border-primary/20">
+                    <span class="w-2 h-2 bg-primary rounded-full animate-pulse"></span>
+                    <span class="text-primary font-mono text-xs uppercase tracking-tighter">Full-Stack Engineer</span>
+                </div>
+                <h1 class="about-name text-4xl sm:text-5xl lg:text-6xl font-black text-white tracking-tight">khaled <span class="text-primary">Ali</span></h1>
+                <div class="flex flex-wrap gap-2 sm:gap-3">
+                    <span class="text-gray-500 font-mono text-xs sm:text-sm border-r border-gray-800 pr-3 sm:pr-4 italic">Engineering Student</span>
+                    <span class="text-gray-500 font-mono text-xs sm:text-sm italic">2+ Years Exp.</span>
+                </div>
+            </div>
+            <div class="hidden lg:block bg-surface/30 p-5 sm:p-6 rounded-2xl border border-gray-800 backdrop-blur-sm shrink-0">
+                <span class="text-gray-500 block text-xs uppercase mb-1">Current Focus</span>
+                <span class="text-white font-bold text-sm sm:text-base">Scalable .NET Architectures</span>
+            </div>
+        </div>
+
+        <div class="grid lg:grid-cols-12 gap-4 sm:gap-6">
+            <!-- Profile text -->
+            <div class="lg:col-span-7 bg-gradient-to-br from-surface/40 to-transparent border border-gray-800 p-6 sm:p-10 rounded-[1.5rem] sm:rounded-[2rem] transition-all duration-500 shadow-2xl">
+                <h3 class="text-lg sm:text-xl font-bold text-white mb-4 sm:mb-6 flex items-center gap-2">
+                    <span class="w-6 sm:w-8 h-[2px] bg-primary shrink-0"></span> Profile Overview
+                </h3>
+                <div class="about-text space-y-4 sm:space-y-6 text-gray-400 text-base sm:text-lg leading-relaxed font-light">
+                    <p>I am a <span class="text-white font-semibold">Full-Stack .NET Developer</span> who thrives at the intersection of logic and creativity. With over two years of experience, I've refined the art of building systems that aren't just functional, but <span class="italic text-gray-300">architecturally sound</span>.</p>
+                    <p>My background in <span class="text-white font-semibold text-primary/80">Engineering</span> has instilled a disciplined approach to problem-solving, ensuring every line of code serves a purpose and every UI interaction feels intentional.</p>
+                </div>
+            </div>
+            <!-- Trait cards -->
+            <div class="lg:col-span-5 grid grid-cols-2 gap-3 sm:gap-4">
+                <div class="group bg-surface/20 border border-gray-800 p-4 sm:p-6 rounded-2xl hover:bg-primary/5 hover:border-primary/40 transition-all duration-500">
+                    <div class="w-9 h-9 sm:w-10 sm:h-10 bg-dark rounded-lg flex items-center justify-center mb-3 sm:mb-4 group-hover:scale-110 transition-transform">
+                        <i class="fa-solid fa-bolt-lightning text-primary"></i>
+                    </div>
+                    <h4 class="text-white font-bold mb-1 text-sm sm:text-base">Agile</h4>
+                    <p class="text-gray-500 text-xs leading-tight font-mono">Fast-paced delivery</p>
+                </div>
+                <div class="group bg-surface/20 border border-gray-800 p-4 sm:p-6 rounded-2xl hover:bg-primary/5 hover:border-primary/40 transition-all duration-500">
+                    <div class="w-9 h-9 sm:w-10 sm:h-10 bg-dark rounded-lg flex items-center justify-center mb-3 sm:mb-4 group-hover:scale-110 transition-transform">
+                        <i class="fa-solid fa-brain text-primary"></i>
+                    </div>
+                    <h4 class="text-white font-bold mb-1 text-sm sm:text-base">Analysis</h4>
+                    <p class="text-gray-500 text-xs leading-tight font-mono">Logic-driven solutions</p>
+                </div>
+                <div class="group bg-surface/20 border border-gray-800 p-4 sm:p-6 rounded-2xl hover:bg-primary/5 hover:border-primary/40 transition-all duration-500">
+                    <div class="w-9 h-9 sm:w-10 sm:h-10 bg-dark rounded-lg flex items-center justify-center mb-3 sm:mb-4 group-hover:scale-110 transition-transform">
+                        <i class="fa-solid fa-comments text-primary"></i>
+                    </div>
+                    <h4 class="text-white font-bold mb-1 text-sm sm:text-base">Clarity</h4>
+                    <p class="text-gray-500 text-xs leading-tight font-mono">Seamless communication</p>
+                </div>
+                <div class="group bg-surface/20 border border-gray-800 p-4 sm:p-6 rounded-2xl hover:bg-primary/5 hover:border-primary/40 transition-all duration-500">
+                    <div class="w-9 h-9 sm:w-10 sm:h-10 bg-dark rounded-lg flex items-center justify-center mb-3 sm:mb-4 group-hover:scale-110 transition-transform">
+                        <i class="fa-solid fa-shield-halved text-primary"></i>
+                    </div>
+                    <h4 class="text-white font-bold mb-1 text-sm sm:text-base">Reliable</h4>
+                    <p class="text-gray-500 text-xs leading-tight font-mono">Ownership & Quality</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ═══════════════════════════ SKILLS ═══════════════════════════ -->
+<section id="skills" class="py-16 sm:py-24 relative">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6">
+        <div class="flex items-center gap-4 mb-10 sm:mb-16">
+            <h2 class="text-3xl sm:text-4xl font-bold text-white shrink-0">My <span class="text-primary">Skills</span></h2>
+            <div class="h-px bg-gray-800 flex-grow"></div>
+        </div>
+        <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-6">
+
+            <!-- HTML -->
+            <div class="skill-card bg-dark/50 border border-gray-800 p-5 sm:p-8 rounded-2xl hover:border-primary hover:-translate-y-2 hover:shadow-[0_0_30px_rgba(249,115,22,0.1)] transition-all duration-300 group text-center">
+                <div class="icon-wrap w-11 h-11 sm:w-14 sm:h-14 bg-surface rounded-2xl flex items-center justify-center mb-4 sm:mb-5 mx-auto group-hover:bg-primary/20 transition">
+                    <i class="fa-brands fa-html5 text-xl sm:text-2xl text-primary"></i>
+                </div>
+                <h3 class="text-sm sm:text-lg font-bold text-white mb-2 sm:mb-3">HTML</h3>
+                <div class="flex flex-wrap justify-center gap-1 sm:gap-2">
+                    <span class="bg-surface px-1.5 sm:px-2 py-1 rounded-md text-[10px] sm:text-xs font-medium text-gray-300 border border-gray-700 group-hover:border-primary/50 transition">Semantic</span>
+                    <span class="bg-surface px-1.5 sm:px-2 py-1 rounded-md text-[10px] sm:text-xs font-medium text-gray-300 border border-gray-700 group-hover:border-primary/50 transition">HTML5</span>
+                    <span class="bg-surface px-1.5 sm:px-2 py-1 rounded-md text-[10px] sm:text-xs font-medium text-gray-300 border border-gray-700 group-hover:border-primary/50 transition">A11y</span>
+                </div>
+            </div>
+
+            <!-- CSS -->
+            <div class="skill-card bg-dark/50 border border-gray-800 p-5 sm:p-8 rounded-2xl hover:border-primary hover:-translate-y-2 hover:shadow-[0_0_30px_rgba(249,115,22,0.1)] transition-all duration-300 group text-center">
+                <div class="icon-wrap w-11 h-11 sm:w-14 sm:h-14 bg-surface rounded-2xl flex items-center justify-center mb-4 sm:mb-5 mx-auto group-hover:bg-primary/20 transition">
+                    <i class="fa-brands fa-css3-alt text-xl sm:text-2xl text-primary"></i>
+                </div>
+                <h3 class="text-sm sm:text-lg font-bold text-white mb-2 sm:mb-3">CSS</h3>
+                <div class="flex flex-wrap justify-center gap-1 sm:gap-2">
+                    <span class="bg-surface px-1.5 sm:px-2 py-1 rounded-md text-[10px] sm:text-xs font-medium text-gray-300 border border-gray-700 group-hover:border-primary/50 transition">Flexbox</span>
+                    <span class="bg-surface px-1.5 sm:px-2 py-1 rounded-md text-[10px] sm:text-xs font-medium text-gray-300 border border-gray-700 group-hover:border-primary/50 transition">Grid</span>
+                    <span class="bg-surface px-1.5 sm:px-2 py-1 rounded-md text-[10px] sm:text-xs font-medium text-gray-300 border border-gray-700 group-hover:border-primary/50 transition">Animations</span>
+                </div>
+            </div>
+
+            <!-- JavaScript -->
+            <div class="skill-card bg-dark/50 border border-gray-800 p-5 sm:p-8 rounded-2xl hover:border-primary hover:-translate-y-2 hover:shadow-[0_0_30px_rgba(249,115,22,0.1)] transition-all duration-300 group text-center">
+                <div class="icon-wrap w-11 h-11 sm:w-14 sm:h-14 bg-surface rounded-2xl flex items-center justify-center mb-4 sm:mb-5 mx-auto group-hover:bg-primary/20 transition">
+                    <i class="fa-brands fa-js text-xl sm:text-2xl text-primary"></i>
+                </div>
+                <h3 class="text-sm sm:text-lg font-bold text-white mb-2 sm:mb-3">JavaScript</h3>
+                <div class="flex flex-wrap justify-center gap-1 sm:gap-2">
+                    <span class="bg-surface px-1.5 sm:px-2 py-1 rounded-md text-[10px] sm:text-xs font-medium text-gray-300 border border-gray-700 group-hover:border-primary/50 transition">ES6+</span>
+                    <span class="bg-surface px-1.5 sm:px-2 py-1 rounded-md text-[10px] sm:text-xs font-medium text-gray-300 border border-gray-700 group-hover:border-primary/50 transition">DOM</span>
+                    <span class="bg-surface px-1.5 sm:px-2 py-1 rounded-md text-[10px] sm:text-xs font-medium text-gray-300 border border-gray-700 group-hover:border-primary/50 transition">Async</span>
+                </div>
+            </div>
+
+            <!-- C# -->
+            <div class="skill-card bg-dark/50 border border-gray-800 p-5 sm:p-8 rounded-2xl hover:border-primary hover:-translate-y-2 hover:shadow-[0_0_30px_rgba(249,115,22,0.1)] transition-all duration-300 group text-center">
+                <div class="icon-wrap w-11 h-11 sm:w-14 sm:h-14 bg-surface rounded-2xl flex items-center justify-center mb-4 sm:mb-5 mx-auto group-hover:bg-primary/20 transition">
+                    <i class="fa-brands fa-microsoft text-xl sm:text-2xl text-primary"></i>
+                </div>
+                <h3 class="text-sm sm:text-lg font-bold text-white mb-2 sm:mb-3">C#</h3>
+                <div class="flex flex-wrap justify-center gap-1 sm:gap-2">
+                    <span class="bg-surface px-1.5 sm:px-2 py-1 rounded-md text-[10px] sm:text-xs font-medium text-gray-300 border border-gray-700 group-hover:border-primary/50 transition">OOP</span>
+                    <span class="bg-surface px-1.5 sm:px-2 py-1 rounded-md text-[10px] sm:text-xs font-medium text-gray-300 border border-gray-700 group-hover:border-primary/50 transition">LINQ</span>
+                    <span class="bg-surface px-1.5 sm:px-2 py-1 rounded-md text-[10px] sm:text-xs font-medium text-gray-300 border border-gray-700 group-hover:border-primary/50 transition">.NET 8</span>
+                </div>
+            </div>
+
+            <!-- Angular -->
+            <div class="skill-card bg-dark/50 border border-gray-800 p-5 sm:p-8 rounded-2xl hover:border-primary hover:-translate-y-2 hover:shadow-[0_0_30px_rgba(249,115,22,0.1)] transition-all duration-300 group text-center">
+                <div class="icon-wrap w-11 h-11 sm:w-14 sm:h-14 bg-surface rounded-2xl flex items-center justify-center mb-4 sm:mb-5 mx-auto group-hover:bg-primary/20 transition">
+                    <i class="fa-brands fa-angular text-xl sm:text-2xl text-primary"></i>
+                </div>
+                <h3 class="text-sm sm:text-lg font-bold text-white mb-2 sm:mb-3">Angular</h3>
+                <div class="flex flex-wrap justify-center gap-1 sm:gap-2">
+                    <span class="bg-surface px-1.5 sm:px-2 py-1 rounded-md text-[10px] sm:text-xs font-medium text-gray-300 border border-gray-700 group-hover:border-primary/50 transition">Components</span>
+                    <span class="bg-surface px-1.5 sm:px-2 py-1 rounded-md text-[10px] sm:text-xs font-medium text-gray-300 border border-gray-700 group-hover:border-primary/50 transition">RxJS</span>
+                    <span class="bg-surface px-1.5 sm:px-2 py-1 rounded-md text-[10px] sm:text-xs font-medium text-gray-300 border border-gray-700 group-hover:border-primary/50 transition">Routing</span>
+                </div>
+            </div>
+
+            <!-- Tailwind -->
+            <div class="skill-card bg-dark/50 border border-gray-800 p-5 sm:p-8 rounded-2xl hover:border-primary hover:-translate-y-2 hover:shadow-[0_0_30px_rgba(249,115,22,0.1)] transition-all duration-300 group text-center">
+                <div class="icon-wrap w-11 h-11 sm:w-14 sm:h-14 bg-surface rounded-2xl flex items-center justify-center mb-4 sm:mb-5 mx-auto group-hover:bg-primary/20 transition">
+                    <i class="fa-solid fa-wind text-xl sm:text-2xl text-primary"></i>
+                </div>
+                <h3 class="text-sm sm:text-lg font-bold text-white mb-2 sm:mb-3">Tailwind CSS</h3>
+                <div class="flex flex-wrap justify-center gap-1 sm:gap-2">
+                    <span class="bg-surface px-1.5 sm:px-2 py-1 rounded-md text-[10px] sm:text-xs font-medium text-gray-300 border border-gray-700 group-hover:border-primary/50 transition">Utility</span>
+                    <span class="bg-surface px-1.5 sm:px-2 py-1 rounded-md text-[10px] sm:text-xs font-medium text-gray-300 border border-gray-700 group-hover:border-primary/50 transition">Responsive</span>
+                    <span class="bg-surface px-1.5 sm:px-2 py-1 rounded-md text-[10px] sm:text-xs font-medium text-gray-300 border border-gray-700 group-hover:border-primary/50 transition">Dark Mode</span>
+                </div>
+            </div>
+
+            <!-- SQL Server -->
+            <div class="skill-card bg-dark/50 border border-gray-800 p-5 sm:p-8 rounded-2xl hover:border-primary hover:-translate-y-2 hover:shadow-[0_0_30px_rgba(249,115,22,0.1)] transition-all duration-300 group text-center">
+                <div class="icon-wrap w-11 h-11 sm:w-14 sm:h-14 bg-surface rounded-2xl flex items-center justify-center mb-4 sm:mb-5 mx-auto group-hover:bg-primary/20 transition">
+                    <i class="fa-solid fa-database text-xl sm:text-2xl text-primary"></i>
+                </div>
+                <h3 class="text-sm sm:text-lg font-bold text-white mb-2 sm:mb-3">SQL Server</h3>
+                <div class="flex flex-wrap justify-center gap-1 sm:gap-2">
+                    <span class="bg-surface px-1.5 sm:px-2 py-1 rounded-md text-[10px] sm:text-xs font-medium text-gray-300 border border-gray-700 group-hover:border-primary/50 transition">T-SQL</span>
+                    <span class="bg-surface px-1.5 sm:px-2 py-1 rounded-md text-[10px] sm:text-xs font-medium text-gray-300 border border-gray-700 group-hover:border-primary/50 transition">EF Core</span>
+                    <span class="bg-surface px-1.5 sm:px-2 py-1 rounded-md text-[10px] sm:text-xs font-medium text-gray-300 border border-gray-700 group-hover:border-primary/50 transition">Queries</span>
+                </div>
+            </div>
+
+            <!-- ASP.NET -->
+            <div class="skill-card bg-dark/50 border border-gray-800 p-5 sm:p-8 rounded-2xl hover:border-primary hover:-translate-y-2 hover:shadow-[0_0_30px_rgba(249,115,22,0.1)] transition-all duration-300 group text-center">
+                <div class="icon-wrap w-11 h-11 sm:w-14 sm:h-14 bg-surface rounded-2xl flex items-center justify-center mb-4 sm:mb-5 mx-auto group-hover:bg-primary/20 transition">
+                    <i class="fa-solid fa-server text-xl sm:text-2xl text-primary"></i>
+                </div>
+                <h3 class="text-sm sm:text-lg font-bold text-white mb-2 sm:mb-3">ASP.NET</h3>
+                <div class="flex flex-wrap justify-center gap-1 sm:gap-2">
+                    <span class="bg-surface px-1.5 sm:px-2 py-1 rounded-md text-[10px] sm:text-xs font-medium text-gray-300 border border-gray-700 group-hover:border-primary/50 transition">Web API</span>
+                    <span class="bg-surface px-1.5 sm:px-2 py-1 rounded-md text-[10px] sm:text-xs font-medium text-gray-300 border border-gray-700 group-hover:border-primary/50 transition">MVC</span>
+                    <span class="bg-surface px-1.5 sm:px-2 py-1 rounded-md text-[10px] sm:text-xs font-medium text-gray-300 border border-gray-700 group-hover:border-primary/50 transition">Auth</span>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+<!-- ═══════════════════════════ PROJECTS ═══════════════════════════ -->
+<section id="projects" class="py-16 sm:py-24 bg-surface/30">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6">
+        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-end gap-2 mb-8 sm:mb-12">
+            <h2 class="text-2xl sm:text-3xl font-bold">Featured <span class="text-primary">Work</span></h2>
+            <span class="text-gray-500 text-xs sm:text-sm">Click any card to visit the live project</span>
+        </div>
+
+        <div class="grid sm:grid-cols-2 gap-5 sm:gap-8">
+
+            <!-- ── PngBird ── -->
+            <a href="https://pngbird.vercel.app" target="_blank" rel="noopener noreferrer"
+               class="project-card bg-dark border border-gray-800 rounded-2xl overflow-hidden group block">
+                <div class="h-64 sm:h-64 relative overflow-hidden bg-[#080b14]">
+                   <img src="/pngbird.vercel.app_.png" alt="">
+                    <div class="project-link-btn absolute bottom-3 right-3 bg-primary/90 text-white text-xs font-bold px-2.5 py-1.5 rounded-lg flex items-center gap-1.5">
+                        <i class="fa-solid fa-arrow-up-right-from-square text-xs"></i> Visit Live
+                    </div>
+                </div>
+                <div class="p-5 sm:p-8">
+                    <h3 class="text-lg sm:text-xl font-bold text-white mb-2">PngBird</h3>
+                    <p class="text-gray-400 text-sm sm:text-base mb-4">AI-powered PNG gallery platform with Pixabay API integration, AI image generation, progressive loading, and an admin dashboard with SEO optimization.</p>
+                    <div class="flex gap-2 flex-wrap text-xs font-medium">
+                        <span class="bg-surface px-2.5 py-1 rounded-full border border-gray-700">Next.js</span>
+                        <span class="bg-surface px-2.5 py-1 rounded-full border border-gray-700">Supabase</span>
+                        <span class="bg-surface px-2.5 py-1 rounded-full border border-gray-700">AI Generation</span>
+                        <span class="bg-surface px-2.5 py-1 rounded-full border border-gray-700">Clerk Auth</span>
+                    </div>
+                </div>
+            </a>
+
+            <!-- ── DecoHouse ── -->
+            <a href="https://decohouse.runasp.net/" target="_blank" rel="noopener noreferrer"
+               class="project-card bg-dark border border-gray-800 rounded-2xl overflow-hidden group block">
+                <div class="h-64 sm:h-64 relative overflow-hidden">
+                  <img src="/localhost_7283_ (1).png" alt="">
+                    <div class="project-link-btn absolute bottom-3 right-3 bg-primary/90 text-white text-xs font-bold px-2.5 py-1.5 rounded-lg flex items-center gap-1.5">
+                        <i class="fa-solid fa-arrow-up-right-from-square text-xs"></i> Visit Live
+                    </div>
+                </div>
+                <div class="p-5 sm:p-8">
+                    <h3 class="text-lg sm:text-xl font-bold text-white mb-2">DecoHouse</h3>
+                    <p class="text-gray-400 text-sm sm:text-base mb-4">E-commerce platform dedicated to home decor, featuring a clean UI, product management, secure authentication, and a robust ASP.NET Core backend.</p>
+                    <div class="flex gap-2 flex-wrap text-xs font-medium">
+                        <span class="bg-surface px-2.5 py-1 rounded-full border border-gray-700">ASP.NET Core</span>
+                        <span class="bg-surface px-2.5 py-1 rounded-full border border-gray-700">EF Core</span>
+                        <span class="bg-surface px-2.5 py-1 rounded-full border border-gray-700">E-Commerce</span>
+                        <span class="bg-surface px-2.5 py-1 rounded-full border border-gray-700">LINQ</span>
+                    </div>
+                </div>
+            </a>
+
+            <!-- ── Beit El Hadayah ── -->
+            <a href="https://beit-elhadayah.vercel.app" target="_blank" rel="noopener noreferrer"
+               class="project-card bg-dark border border-gray-800 rounded-2xl overflow-hidden group block">
+                <div class="h-64 sm:h-64 relative overflow-hidden">
+                   <img src="/127.0.0.1_5502_index.html (10).png" alt="">
+                    <div class="project-link-btn absolute bottom-3 right-3 bg-primary/90 text-white text-xs font-bold px-2.5 py-1.5 rounded-lg flex items-center gap-1.5">
+                        <i class="fa-solid fa-arrow-up-right-from-square text-xs"></i> Visit Live
+                    </div>
+                </div>
+                <div class="p-5 sm:p-8">
+                    <h3 class="text-lg sm:text-xl font-bold text-white mb-2">بيت الهدايا</h3>
+                    <p class="text-gray-400 text-sm sm:text-base mb-4">Arabic gift store platform with full RTL support, product catalog, and a polished shopping experience designed for the Egyptian market.</p>
+                    <div class="flex gap-2 flex-wrap text-xs font-medium">
+                        <span class="bg-surface px-2.5 py-1 rounded-full border border-gray-700">React</span>
+                        <span class="bg-surface px-2.5 py-1 rounded-full border border-gray-700">Arabic RTL</span>
+                        <span class="bg-surface px-2.5 py-1 rounded-full border border-gray-700">Vercel</span>
+                        <span class="bg-surface px-2.5 py-1 rounded-full border border-gray-700">E-Commerce</span>
+                    </div>
+                </div>
+            </a>
+
+            <!-- ── GoalHub ── -->
+            <div class="project-card bg-dark border border-gray-800 rounded-2xl overflow-hidden group">
+                <div class="h-64 sm:h-64 relative overflow-hidden">
+                   <img src="/speak-ai-eight.vercel.app_.png" alt="">
+                    <span class="absolute top-3 right-3 bg-primary text-white text-xs font-bold px-2 py-1 rounded">Ad Monetized</span>
+                </div>
+                <div class="p-5 sm:p-8">
+                    <h3 class="text-lg sm:text-xl font-bold text-white mb-2">speaksmart-ai</h3>
+                    <p class="text-gray-400 text-sm sm:text-base mb-4">Dynamic football news website featuring real-time player statistics, live news feeds, and ad monetization generating consistent revenue.</p>
+                    <div class="flex gap-2 flex-wrap text-xs font-medium">
+                        <span class="bg-surface px-2.5 py-1 rounded-full border border-gray-700">Web App</span>
+                        <span class="bg-surface px-2.5 py-1 rounded-full border border-gray-700">Data Analytics</span>
+                        <span class="bg-surface px-2.5 py-1 rounded-full border border-gray-700">Real-time</span>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+<!-- ═══════════════════════════ CONTACT ═══════════════════════════ -->
+<section id="contact" class="py-16 sm:py-24">
+    <div class="max-w-3xl mx-auto px-4 sm:px-6 text-center">
+        <h2 class="text-3xl sm:text-4xl font-bold mb-4 sm:mb-6">Let's Build Something <span class="text-primary">Great</span></h2>
+        <p class="text-gray-400 mb-8 sm:mb-10 text-base sm:text-lg">Whether you need a complex .NET backend, an IoT hardware integration, or a sleek frontend, I'm available for freelance projects.</p>
+        <div class="space-y-3 sm:space-y-4 text-left">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+                <input type="text" placeholder="Name" class="w-full bg-surface border border-gray-800 rounded-lg px-4 py-3 focus:outline-none focus:border-primary text-white text-sm sm:text-base">
+                <input type="email" placeholder="Email" class="w-full bg-surface border border-gray-800 rounded-lg px-4 py-3 focus:outline-none focus:border-primary text-white text-sm sm:text-base">
+            </div>
+            <textarea rows="4" placeholder="Tell me about your project" class="w-full bg-surface border border-gray-800 rounded-lg px-4 py-3 focus:outline-none focus:border-primary text-white text-sm sm:text-base"></textarea>
+            <button type="button" class="w-full bg-primary hover:bg-orange-600 text-white font-bold py-3 sm:py-4 rounded-lg transition text-sm sm:text-base">Send Message</button>
+        </div>
+    </div>
+</section>
+
+<!-- ═══════════════════════════ FOOTER ═══════════════════════════ -->
+<footer class="border-t border-gray-800 py-6 sm:py-8 text-center text-gray-500 text-xs sm:text-sm">
+    <p>&copy; 2026 Developed with <span class="text-primary">Tailwind CSS</span>. All rights reserved.</p>
+</footer>
+
+</body>
+</html>
